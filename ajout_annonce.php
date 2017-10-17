@@ -34,7 +34,7 @@ if(!empty($_POST)){
 		$ext = array('image/png', 'image/jpeg', 'image/gif');
 		if(!in_array($_FILES['photo']['type'], $ext)){
 			$msg .= '<div class="erreur">Images autorisées : PNG, JPG, JPEG et GIF</div>';
-			// Si le fichier uploadé ne correspond pas aux extensions autorisées (ici PNG, JPEG, JPG et GIF) alors on affiche un message d'erreur.
+			// Si le fichier uploadé ne correspond pas aux ext<a href="ajout_annonce%20bis.php">No Title</a>ensions autorisées (ici PNG, JPEG, JPG et GIF) alors on affiche un message d'erreur.
 		}
 		
 		if($_FILES['photo']['size'] > 2000000){
@@ -52,8 +52,8 @@ if(!empty($_POST)){
 	
 	
 	// Insérer les infos du produit en BDD...
-	// Au préalable nous aurions vérifié tous les champs (taille, caractères, no empty etc......)
-	
+	// Au préalable, nous aurions vérifié tous les champs (taille, caractères, no empty etc......)
+	<a href="ajout_annonce%20bis.php">No Title</a>
 	if(empty($msg)){
 		
 		
@@ -144,7 +144,7 @@ require('../inc/header.inc.php');
 	<input type="text" name="titre" value="<?= $titre ?>"/>
 	
 	<label>Description courte :</label>
-	<input type ="text" name="description_courte"><?= $description_courte ?>"/>
+	<input type ="text" name="description_courte"<?= $description_courte ?>"/>
 
 	<label>Description longue :</label>
 	<textarea name="description_longue"><?= $description_longue ?></textarea>
