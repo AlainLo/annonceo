@@ -126,9 +126,7 @@ $nom = 			(isset($_POST['nom'])) ? $_POST['nom'] : '';
 $prenom = 		(isset($_POST['prenom'])) ? $_POST['prenom'] : '';
 $email = 		(isset($_POST['email'])) ? $_POST['email'] : '';
 $civilite = 	(isset($_POST['civilite'])) ? $_POST['civilite'] : '';
-$adresse = 		(isset($_POST['adresse'])) ? $_POST['adresse'] : '';
-$ville = 		(isset($_POST['ville'])) ? $_POST['ville'] : '';
-$cp = 	(isset($_POST['cp'])) ? $_POST['cp'] : '';
+
 
 $page = 'Inscription';
 require_once('inc/header.inc.php');
@@ -153,12 +151,6 @@ require_once('inc/header.inc.php');
 		<option value="m" selected >Homme</option>
 		<option value="f" <?= ($civilite == 'f') ? 'selected' : '' ?> >Femme</option>
 	</select>
-	<label>Ville:</label>
-	<input type="text" name="ville" value="<?= $ville ?>"/>
-	<label>Code Postal:</label>
-	<input type="text" name="cp" value="<?= $cp ?>"/>
-	<label>Adresse:</label>
-	<input type="text" name="adresse" value="<?= $adresse ?>"/>
 	<input type="submit" value="Inscription" />
 </form>
 
