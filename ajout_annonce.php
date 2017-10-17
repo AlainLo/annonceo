@@ -9,12 +9,12 @@ if(!empty($_POST)){
 	debug($_FILES);
 	
 	// Renommer la photo / ref_time()_nom.ext
-	// controls sur la photo
+	// contrôles sur la photo
 	// enregistrer la photo sur le serveur
 	
-	// Controls sur les infos du formulaire (pas vide, nbre de caractère etc...)
+	// Contrôles sur les infos du formulaire (pas vide, nbre de caractère etc...)
 	// Requete pour insérer les infos dans la BDD. 
-	// redirection sur gestion_boutique.php
+	// redirection sur gestion_annonces.php
 	
 	$nom_photo = 'default.jpg';
 	
@@ -92,17 +92,17 @@ if(!empty($_POST)){
 // traitement pour modifier une annonce
 	// 1/ On récupère les infos du produit actuel (en cours de modification)
 	// 2/ On insert les infos de ce produit dans le formulaire
-	// 3/ Gestion de la photo : Si on modifie simplement un texte il faut renvoyer l'ancienne image. Si on modifie l'image il faut pouvoir récupérer la nouvelle image. 
+	// 3/ Gestion de la photo : Si on modifie simplement un texte, il faut renvoyer l'ancienne image. Si on modifie l'image, il faut pouvoir récupérer la nouvelle image. 
 	// 4/ Enregistrement des modifications
 	
 
 if(isset($_GET['id']) && !empty($_GET['id']) && is_numeric($_GET['id'])){
-// Si j'ai un ID dans l'URL, non vide et de type INT, alors je suis dans le cadre de la modification d'un produit. 	
+// Si j'ai un ID dans l'URL, non vide et de type INT, alors je suis dans le cadre de la modification d'une annonce. 	
 	
 	$resultat = $pdo -> prepare("SELECT * FROM annonce WHERE id_annonce = ?");
 	$resultat -> execute(array($_GET['id']));
 	
-	if($resultat -> rowCount() > 0){ //Signifie que le produit existe donc l'id passé en URL était conforme.
+	if($resultat -> rowCount() > 0){ //Signifie que l'annonce existe, donc l'id passé en URL était conforme.
 		$annonce_actuelle = $resultat -> fetch(PDO::FETCH_ASSOC);
 		debug($annonce_actuelle);
 	}
@@ -111,8 +111,8 @@ if(isset($_GET['id']) && !empty($_GET['id']) && is_numeric($_GET['id'])){
 // Créons des variables pour chaque élément à insérer dans le formulaire : 
 $reference = (isset($annonce_actuelle)) ? $annonce_actuelle['reference'] : '';	
 // cela revient à faire : 
-if(isset($produit_actuel)){
-	$reference = $produit_actuel['reference'];
+if(isset($annonce_actuelle)){
+	$reference = $annonce_actuelle['reference'];
 }
 else{
 	$reference = '';
@@ -131,7 +131,7 @@ $categorie = (isset($annonce_actuelle)) ? $annonce_actuelle'categorie'] : '';
 
 $action = (isset($annonce_actuelle)) ? 'Modifier' : 'Ajouter';
 
-$page = 'gestion_annonce';
+$page = 'gestion_annonces';
 require('../inc/header.inc.php');
 ?>
 <h1><?= $action ?> une annonce</h1>
@@ -153,7 +153,7 @@ require('../inc/header.inc.php');
 	<input type="text" name="prix" value="<?= $prix ?>"/>
 
 	<?php if(isset($annonce_actuelle)) :  ?>
-		<img src="<?= RACINE_SITE ?>photo/<?= $photo ?>" height="100px"/>
+		<img src="<?= RACINE_ANNONCEO ?>photo/<?= $photo ?>" height="100px"/>
 		<input type="hidden" name="photo_actuelle" value="<?= $photo ?>" />
 	<?php endif; ?>
 
