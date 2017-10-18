@@ -1,74 +1,97 @@
-﻿<?php 
-require_once('../inc/init.inc.php');
-
-if(isset($_GET['msg']) && $_GET['msg'] == 'validation' && isset($_GET['id'])){
-	$msg .= '<div class="validation">Le produit N°' . $_GET['id'] . ' a été correctement enregistré !</div>';
-}
-
-if(isset($_GET['msg']) && $_GET['msg'] == 'suppr' && isset($_GET['id'])){
-	$msg .= '<div class="validation">Le produit N°' . $_GET['id'] . ' a été correctement supprimé !</div>'; 
-}
-
-
-$resultat = $pdo -> query("SELECT * FROM produit");
-$produits = $resultat -> fetchAll(PDO::FETCH_ASSOC); 
-$contenu .= 'Nombre de résultats : ' . $resultat -> rowCount() . '<br/><hr/>';
-
-$contenu .= $msg;
-$contenu .= '<table border="1">';
-$contenu .= '<tr>'; // ligne des titres 
-
-for($i = 0; $i < $resultat -> columnCount(); $i++ ){	
-	$colonne = $resultat -> getColumnMeta($i);
-	$contenu .= '<th>' . $colonne['name'] . '</th>'; 
-}
-
-$contenu .= '	<th colspan="2">Actions</th>';
-$contenu .= '</tr>'; // fin ligne des titres
-
-foreach($produits as $valeur){ // parcourt tous les enregistrements
-	$contenu .= '<tr>'; // ligne pour chaque enregistrement
-		
-		foreach($valeur as $indice => $valeur2){ // Parcourt toutes les infos de chaque enregistrement
-			
-			if($indice == 'photo'){
-				$contenu .= '<td><img src="' . RACINE_SITE . 'photo/' . $valeur2 . '" height="90"/></td>';
-			}
-			else{
-				$contenu .= '<td>' . $valeur2. '</td>';
-			}		
-		}
-		$contenu .= '<td><a href="formulaire_produit.php?id=' . $valeur['id_produit'] . '"><img src="../img/edit.png" /></a></td>';
-		$contenu .= '<td><a onclick="confirm(\'Êtes certain de vouloir supprimer ce produit numéro ' . $valeur['id_produit'] . ' \');" href="supprimer_produit.php?id=' . $valeur['id_produit'] . '"><img src="../img/delete.png" /></a></td>';
-		
-	$contenu .= '</tr>';
-}
-$contenu .= '</table>';
-
-
-
-
-
-$page = 'Gestion Boutique';
-require_once('../inc/header.inc.php');
-?>
-<!-- Contenu HTML -->
-<h1>Gestion des produits de la boutique</h1>
-
-<a class="btn-add" href="formulaire_produit.php">Ajouter un produit</a>
-
-
-<?= $contenu ?>
-
-
-
-
-
-
-
-
-
-
 <?php
-require_once('../inc/footer.inc.php');
-?>
+require_once ('../inc/init.inc.php');
+
+if (isset($_GET['msg']) && $_GET['msg'] == 'validation' && isset($_GET['id'])){
+    $msg .= '<div class="validation">L\'annonce n° '.$_GET['id'].' a été correctement enregistrée !</div>';
+}
+
+if (isset($_GET['msg']) && $_GET['msg'] == 'suppr' && isset($_GET['id'])){
+    $msg .= '<div class="validation">L\'annonce n° '.$_GET['id'].' a été correctement supprimée !</div>';
+}
+
+$resultat = $pdo->query('SELECT id_annonce,
+    a.titre,
+    description_courte,
+    description_longue,
+    prix,
+    photo,
+    pays,
+    ville,
+    adresse,
+    cp,
+    prenom membre,
+    c.titre categorie,
+    a.date_enregistrement
+    FROM annonce a
+    LEFT JOIN membre m ON a.membre_id=m.id_membre
+    LEFT JOIN categorie c ON a.categorie_id=c.id_categorie');
+    $membres = $resultat -> fetchAll(PDO::FETCH_ASSOC);
+    // $contenu .=  '<br>Nombre de membres : '.$resultat->rowCount().'<br><hr>';
+
+    $contenu .= '<table border=1 class="table table-bordered">';
+    $contenu .= '<tr>';
+
+    for($i=0;$i < $resultat->columnCount();$i++){
+        $colonne = $resultat->getColumnMeta($i);
+        $contenu .=  '<th>';
+        $contenu .=  str_replace('_', '<br>', $colonne['name']);
+
+        $contenu .= '</th>';
+    }
+    $contenu .=  '<th>';
+    $contenu .=  'Action';
+    $contenu .= '</th>';
+
+    $contenu .= '</tr>';
+    foreach ($membres as $val){
+        $contenu .= '<tr>';
+        foreach($val as $key => $val2){
+            // if ($key !='membre_id'){
+            $contenu .= '<td>';
+            if ($key == 'photo'){
+                if (file_exists('../photos/'.$val2)){
+                    $contenu .=  '<img src="'.'../photos/'.$val2.'" alt="">';
+                    $contenu .= '<p><a href="#">Voir les autres photos</a></p>';
+                }
+                else{
+                    $contenu .=  '';
+                }
+            } else{
+                $contenu .= $val2;
+            }
+
+            // }
+            $contenu .= '</td>';
+        }
+
+        $contenu .= '<td>';
+        $contenu .= '<a href="../inscription.php?id='.$val['id_annonce'].'"> <span class="glyphicon glyphicon-edit" aria-hidden="true"></span></a> ';
+        $contenu .= ' <a href="supprimer_membre.php?id='.$val['id_annonce'].'"> <span class="glyphicon glyphicon-trash" aria-hidden="true"></span></a>';
+        $contenu .= '</td>';
+        $contenu .= '</tr>';
+    }
+    $contenu .= '</table>';
+
+    $page = 'gestion annonces - ';
+    require_once ('../inc/header.inc.php');
+    ?>
+    <!--  contenu HTML  -->
+    <h1>Gestion des annonces</h1>
+    <section class="row">
+        <div class="col-md-4">
+            <select>
+                <option value="">Trier par catégorie</option>
+                <option value="">Trier par membre</option>
+                <option value="">Trier par date d'enregistrement</option>
+            </select>
+        </div>
+    </section>
+    <hr>
+    <section class="row">
+        <div class="col-md-12">
+            <?= $contenu ?>
+        </div>
+    </section>
+
+
+    <?php require_once ('../inc/footer.inc.php'); ?>
